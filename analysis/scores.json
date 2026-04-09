@@ -1,0 +1,190 @@
+[
+  {
+    "run_id": "260331-opus",
+    "date": "2026-03-31",
+    "model": "opus",
+    "infra_version": "none",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 74,
+    "scores": {
+      "functionality": { "spec_compliance": 9, "runtime_correctness": 9 },
+      "code_quality": { "type_safety": 5, "naming_structure": 5, "error_handling": 5, "idiomatic_patterns": 4 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 5 },
+      "test_quality": { "coverage": 4, "test_design": 4, "meaningful_assertions": 5 },
+      "production_readiness": { "security_basics": 3, "performance_awareness": 4, "dx_maintainability": 2 },
+      "bonuses": ["+2 crypto.randomUUID", "+2 WAL mode + user-existence check", "+2 ARIA labels"],
+      "penalties": ["-1 hardcoded session secret fallback", "-5 SQL injection in updateTask field names"]
+    }
+  },
+  {
+    "run_id": "260331-kimi",
+    "date": "2026-03-31",
+    "model": "kimi-k2.5",
+    "infra_version": "none",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 56,
+    "scores": {
+      "functionality": { "spec_compliance": 9, "runtime_correctness": 9 },
+      "code_quality": { "type_safety": 5, "naming_structure": 4, "error_handling": 4, "idiomatic_patterns": 4 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 4 },
+      "test_quality": { "coverage": 3, "test_design": 4, "meaningful_assertions": 4 },
+      "production_readiness": { "security_basics": 2, "performance_awareness": 4, "dx_maintainability": 2 },
+      "bonuses": ["+1 description max 5000 chars", "+1 Modal ARIA"],
+      "penalties": ["-3 unused deps (iron-session, uuid)", "-3 console.error in routes", "-1 hardcoded secret", "-7 unsigned session cookies"]
+    }
+  },
+  {
+    "run_id": "260331-kimi-skills",
+    "date": "2026-03-31",
+    "model": "kimi-k2.5",
+    "infra_version": "skills-only",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 4,
+    "scores": {
+      "functionality": { "spec_compliance": 0, "runtime_correctness": 0 },
+      "code_quality": { "type_safety": 1, "naming_structure": 1, "error_handling": 0, "idiomatic_patterns": 1 },
+      "architecture": { "separation_of_concerns": 1, "api_design": 1, "file_organization": 1 },
+      "test_quality": { "coverage": 1, "test_design": 1, "meaningful_assertions": 0 },
+      "production_readiness": { "security_basics": 0, "performance_awareness": 0, "dx_maintainability": 1 },
+      "bonuses": [],
+      "penalties": ["-5 build did not complete"]
+    },
+    "notes": "Build stalled in Phase 2. Likely context overflow from loading all 4 skills (1840 lines) simultaneously."
+  },
+  {
+    "run_id": "260331-kimi-skills-completed",
+    "date": "2026-03-31",
+    "model": "kimi-k2.5",
+    "infra_version": "skills-v1",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 81,
+    "scores": {
+      "functionality": { "spec_compliance": 9, "runtime_correctness": 9 },
+      "code_quality": { "type_safety": 5, "naming_structure": 5, "error_handling": 4, "idiomatic_patterns": 5 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 5 },
+      "test_quality": { "coverage": 5, "test_design": 4, "meaningful_assertions": 4 },
+      "production_readiness": { "security_basics": 5, "performance_awareness": 4, "dx_maintainability": 5 },
+      "bonuses": ["+2 env validation at startup", "+2 comprehensive README", "+1 column whitelisting"],
+      "penalties": ["-1 console.error in env.ts", "-2 unused deps (supertest, clsx)"]
+    },
+    "notes": "First successful kimi-skills run. 4 original skills, 137 tests. Skills fixed session security, console, .env.example."
+  },
+  {
+    "run_id": "260331-kimi-skills-v2",
+    "date": "2026-03-31",
+    "model": "kimi-k2.5",
+    "infra_version": "v1",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 88,
+    "scores": {
+      "functionality": { "spec_compliance": 9, "runtime_correctness": 9 },
+      "code_quality": { "type_safety": 5, "naming_structure": 5, "error_handling": 5, "idiomatic_patterns": 5 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 5 },
+      "test_quality": { "coverage": 5, "test_design": 5, "meaningful_assertions": 4 },
+      "production_readiness": { "security_basics": 5, "performance_awareness": 4, "dx_maintainability": 5 },
+      "bonuses": ["+2 column whitelisting with custom sort logic", "+2 real iron-session sealData in tests", "+1 ConfirmDialog + EmptyState components"],
+      "penalties": ["-1 factories.ts created but not imported in tests"]
+    },
+    "notes": "6 improved skills (split testing 3-way), 8 templates, 4 rules, lint. Explicit file-read prompts. 141 tests. All lint checks pass. +7 over v1, +32 over baseline."
+  },
+  {
+    "run_id": "260331-opus-skills-v2",
+    "date": "2026-03-31",
+    "model": "opus",
+    "infra_version": "v1",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 89,
+    "scores": {
+      "functionality": { "spec_compliance": 9, "runtime_correctness": 9 },
+      "code_quality": { "type_safety": 5, "naming_structure": 5, "error_handling": 5, "idiomatic_patterns": 5 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 5 },
+      "test_quality": { "coverage": 5, "test_design": 5, "meaningful_assertions": 5 },
+      "production_readiness": { "security_basics": 5, "performance_awareness": 4, "dx_maintainability": 5 },
+      "bonuses": ["+2 factories used in 7 test files", "+2 login error message parity test", "+1 input length caps + due_date regex", "+1 sealData cookies with header assertions", "+1 filter-aware empty states"],
+      "penalties": []
+    },
+    "notes": "Same infra v1 as kimi-skills-v2. 160 tests. Factories properly used (Kimi missed this twice). Login test verifies error messages don't reveal email existence. All lint checks pass. Zero penalties."
+  },
+  {
+    "run_id": "260331-kimi-project2-baseline",
+    "date": "2026-03-31",
+    "model": "kimi-k2.5",
+    "infra_version": "none",
+    "pipeline": "single-agent",
+    "spec": "project-2",
+    "total": 37,
+    "scores": {
+      "functionality": { "spec_compliance": 7, "runtime_correctness": 7 },
+      "code_quality": { "type_safety": 3, "naming_structure": 4, "error_handling": 2, "idiomatic_patterns": 3 },
+      "architecture": { "separation_of_concerns": 4, "api_design": 4, "file_organization": 3 },
+      "test_quality": { "coverage": 0, "test_design": 0, "meaningful_assertions": 0 },
+      "production_readiness": { "security_basics": 3, "performance_awareness": 3, "dx_maintainability": 2 },
+      "bonuses": ["+2 recursive CTE for depth enforcement", "+2 WebSocket presence server", "+1 full-text search with fallback", "+1 seed scripts"],
+      "penalties": ["-5 17 console.error statements", "-3 5 any types", "-3 zero tests", "-2 .parse() not .safeParse()", "-1 barrel export"]
+    },
+    "notes": "Project-2 (★★☆) baseline. PostgreSQL, WebSocket, revisions, locks, hierarchy. Zero tests. 17 console.error. 5 any types. Good domain understanding (CTE, full-text search) but poor hygiene."
+  },
+  {
+    "run_id": "260331-haiku-skills-v2",
+    "date": "2026-03-31",
+    "model": "haiku-4.5",
+    "infra_version": "v1",
+    "pipeline": "single-agent",
+    "spec": "project-1",
+    "total": 37,
+    "scores": {
+      "functionality": { "spec_compliance": 4, "runtime_correctness": 2 },
+      "code_quality": { "type_safety": 3, "naming_structure": 4, "error_handling": 4, "idiomatic_patterns": 3 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 4, "file_organization": 2 },
+      "test_quality": { "coverage": 3, "test_design": 3, "meaningful_assertions": 2 },
+      "production_readiness": { "security_basics": 3, "performance_awareness": 2, "dx_maintainability": 0 },
+      "bonuses": ["+1 partial factory adoption", "+1 zero console statements", "+1 comprehensive PLAN.md"],
+      "penalties": ["-3 four any types in component props", "-3 seven unused dependencies", "-3 build incomplete (no pages/layout/CSS/config)", "-1 URL regex instead of route params"]
+    },
+    "notes": "Build incomplete — stalled mid-Phase 3. No pages, layout, CSS, next.config, README. 64/126 tests passing. Lib + API routes follow templates well (zero console, safeParse, whitelists). Components use any props. Capability floor reached."
+  },
+  {
+    "run_id": "260331-opus-project2-baseline",
+    "date": "2026-03-31",
+    "model": "opus",
+    "infra_version": "none",
+    "pipeline": "single-agent",
+    "spec": "project-2",
+    "total": 71,
+    "scores": {
+      "functionality": { "spec_compliance": 9, "runtime_correctness": 8 },
+      "code_quality": { "type_safety": 5, "naming_structure": 5, "error_handling": 4, "idiomatic_patterns": 4 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 3 },
+      "test_quality": { "coverage": 3, "test_design": 3, "meaningful_assertions": 3 },
+      "production_readiness": { "security_basics": 4, "performance_awareness": 4, "dx_maintainability": 3 },
+      "bonuses": ["+3 lock ON CONFLICT pattern", "+2 LATERAL JOIN for latest revision", "+2 WebSocket all 4 events", "+1 dompurify sanitization", "+1 cascade delete with reparent"],
+      "penalties": ["-2 tests not colocated", "-1 barrel export", "-1 PLAN.md wrong title", "-1 no .env.example"]
+    },
+    "notes": "Project-2 (★★☆) baseline. 72 tests, zero console, zero any. Full wiki with WebSocket, revisions, locks, hierarchy. Elegant lock acquisition pattern. Tests in tests/ not colocated. No .env.example."
+  },
+  {
+    "run_id": "260331-kimi-skills-p2",
+    "date": "2026-03-31",
+    "model": "kimi-k2.5",
+    "infra_version": "v1",
+    "pipeline": "single-agent",
+    "spec": "project-2",
+    "total": 70,
+    "scores": {
+      "functionality": { "spec_compliance": 8, "runtime_correctness": 7 },
+      "code_quality": { "type_safety": 5, "naming_structure": 5, "error_handling": 4, "idiomatic_patterns": 4 },
+      "architecture": { "separation_of_concerns": 5, "api_design": 5, "file_organization": 4 },
+      "test_quality": { "coverage": 4, "test_design": 3, "meaningful_assertions": 3 },
+      "production_readiness": { "security_basics": 5, "performance_awareness": 4, "dx_maintainability": 3 },
+      "bonuses": ["+2 comprehensive factories", "+2 sealData auth in tests", "+1 env validation with throw", "+1 WebSocket unsealData auth", "+1 DOMPurify sanitization"],
+      "penalties": ["-2 4 unused deps", "-1 no BUILD_LOG", "-1 missing revision restore", "-1 mock-heavy tests", "-1 zero component tests"]
+    },
+    "notes": "Project-2 with infra v1. 74 tests (0 in baseline). Zero console, zero any (17+5 in baseline). Matches Opus P2 baseline (71). Tests mock db instead of integration. Factories excellent. WebSocket auth fixed from forgeable to cryptographic."
+  }
+]
