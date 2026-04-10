@@ -1,6 +1,6 @@
 # Complete Findings — AI Benchmark for Fullstack App Generation
 
-**Last updated:** 2026-04-03
+**Last updated:** 2026-04-09
 **Read this file first in any new session.**
 
 ---
@@ -19,34 +19,42 @@ A benchmark that gives AI models a fullstack Next.js spec and scores their outpu
 ```
 Project 1 (★☆☆) — Task Manager
 ────────────────────────────────────────────────
-Run                     Infra           Arch              Score  Lift
-kimi baseline           none            single agent       56    —
-opus baseline           none            single agent       74    —
-kimi-skills v1          v0 (4 skills)   single agent       81    +25
-kimi-skills-v2          v1 (6 skills)   single agent       88    +32
-opus-skills-v2          v1 (6 skills)   single agent       89    +15
-kimi-chunked            v2 (19 skills)  chunked            92    +36
-kimi-pchunked           v2 (19 skills)  pipeline-chunked   93    +37
-kimi-iterative          v2 (19 skills)  iterative review   91    +35 (regression!)
-kimi-iterative-v2       v2 + meta-tests reduced review     94    +38
-kimi-selfchunk          v2 (19 skills)  self-chunked       72    +16 (incomplete!)
-opus-tdd (build phase)  v2 + meta-tests adversarial TDD    82    +26 (no pages!)
-haiku-skills-v2         v1 (6 skills)   single agent       37    incomplete
+Run                             Infra           Arch              Score  Lift
+kimi baseline                   none            single agent       56    —
+opus baseline                   none            single agent       74    —
+kimi-skills v1                  v0 (4 skills)   single agent       81    +25
+kimi-skills-v2                  v1 (6 skills)   single agent       88    +32
+opus-skills-v2                  v1 (6 skills)   single agent       89    +15
+kimi-chunked                    v2 (19 skills)  chunked            92    +36
+kimi-pchunked                   v2 (19 skills)  pipeline-chunked   93    +37 ← BEST P1 single-shot
+kimi-iterative                  v2 (19 skills)  iterative review   91    +35 (regression!)
+kimi-iterative-v2               v2 + meta-tests reduced review     94    +38 ← BEST P1 overall
+kimi-selfchunk                  v2 (19 skills)  self-chunked       72    +16 (incomplete!)
+opus-tdd (build phase)          v2 + meta-tests adversarial TDD    82    +26 (no pages!)
+opus-superpowers-p1             v2+superpowers  subagent-driven    88
+kimi-superpowers-p1             v2+superpowers  subagent-driven    80     sort non-functional
+kimi-superpowers-unchunked-p1   v2+superpowers  subagent-driven    84     beat chunked variant
+opus-subagents-v2-p1            v2+subagents    6-phase subagent   93     matches v1; seam tests+factories
+haiku-skills-v2                 v1 (6 skills)   single agent       37    incomplete
 
 Project 2 (★★☆) — Collaborative Wiki
 ────────────────────────────────────────────────
-kimi baseline           none            single agent       37    —
-opus baseline           none            single agent       71    —
-kimi-skills-p2          v1 (6 skills)   single agent       70    +33
-kimi-v2-p2 run1         v2 (19 skills)  flat               68    stubs
-kimi-v2-p2 run2         v2 (27 skills)  chunked            74    no pg
-kimi-v2-p2 run3         v2 (27 skills)  chunked+live pg    87    +50
-kimi-v2-p2 run4         v2 (28 skills)  chunked+pg-mem     89    +52 (6 sessions*)
-kimi-hybrid-p2          v2 rewritten    hybrid+meta        74    —  (build fail)
-kimi-metatests-p2       v2+meta         chunked+meta       79    —  (build fail)
-kimi-metatests-v2-p2    v2.1+meta+twfix chunked+meta       88    +51 ← BEST SINGLE-SHOT P2
-opus-metatests-p2-v2    v2.1+meta+twfix chunked+meta       84    +13 (gamed tests)
-opus-intentional-p2     v2.1+meta+intent chunked+meta      —     pending
+kimi baseline                   none            single agent       37    —
+opus baseline                   none            single agent       71    —
+kimi-skills-p2                  v1 (6 skills)   single agent       70    +33
+kimi-v2-p2 run3                 v2 (27 skills)  chunked+live pg    87    +50
+kimi-v2-p2 run4                 v2 (28 skills)  chunked+pg-mem     89    +52 (6 sessions*)
+kimi-hybrid-p2                  v2 rewritten    hybrid+meta        74    —  (build fail)
+kimi-metatests-p2               v2+meta         chunked+meta       79    —  (build fail)
+kimi-metatests-v2-p2            v2.1+meta+twfix chunked+meta       88    +51 ← BEST P2 Kimi single-shot
+opus-metatests-p2-v2            v2.1+meta+twfix chunked+meta       84    +13 (gamed tests)
+opus-intentional-p2             v2.1+meta+intent chunked+meta      91         ← BEST P2 overall
+kimi-superpowers-p2             v2+superpowers  subagent-driven    82    WebSocket seam problem
+opus-superpowers-p2             v2+superpowers  subagent-driven    73    WebSocket seam + cascade delete
+opus-subagents-v2-p2            v2+subagents    6-phase subagent   72    Server seam OK; client WebSocket never consumed ← REGRESSION vs v1
+kimi-subagents-v2-p2            v2+subagents    12-phase subagent  68    pg-mem fixed (DNF→68); same client gap
+opus-subagents-v1-p2            v2+subagents    subagent-driven    88    WebSocket seam (broadcasts not wired to routes)
+kimi-subagents-v1-p2            v2+subagents    subagent-driven    DNF   pg-mem pool lifecycle bug
 
 * kimi-v2-p2 run4 (89) used 6 sessions with human intervention. Single-shot equivalent ~80.
 ```
@@ -129,7 +137,6 @@ opus-intentional-p2     v2.1+meta+intent chunked+meta      —     pending
 ### Finding 12: Hybrid approach is the theoretical optimum
 - Best elements: pchunked simplicity (low overhead) + meta-tests (factory enforcement) + adversarial test patterns (deeper assertions)
 - No reviewer overhead, no tracking files. Just better QA instructions per chunk.
-- Workspace ready: kimi-hybrid-p1
 
 ### Finding 13: Token efficiency matters
 | Run | Score | Input tokens | Tokens/point |
@@ -162,13 +169,12 @@ More process = more tokens ≠ more points. The optimal is minimal process that 
 - Route tests checked status codes without verifying side effects. Lock expiry test completely missing.
 - Kimi (88) with 160 tests scored higher — less creative, more compliant.
 - **Smarter models optimize for easy wins when scoring rewards quantity over quality.**
-- This is distinct from Finding 8 (review degrades quality) — here the MODEL is gaming, not the process.
 
-### Finding 18: Intent framing over rule enforcement
+### Finding 18: Intent framing over rule enforcement (VALIDATED)
 - Adding rules to prevent gaming adds context and dilutes attention.
 - Instead, reframe the agent's purpose: "This is production code for a real team. Tests are their safety net."
+- **Validation:** opus-intentional-p2 scored 91 — BEST P2 overall, beating opus-metatests (84) by 7 points.
 - Shifts optimization from "pass the gates" to "ship with confidence."
-- Testing in opus-intentional-p2 (pending results).
 
 ### Finding 19: Meta-test blind spots
 - `as UserRow` type assertions bypass type safety the same way `as any` does — meta-test regex doesn't catch them
@@ -185,17 +191,44 @@ More process = more tokens ≠ more points. The optimal is minimal process that 
 ### Finding 21: Fresh context via subagents beats accumulated context (CRITICAL)
 - Research confirms: every tested frontier model degrades as context length increases (Chroma 2025)
 - Our data: pchunked (93) used role-switching within one session. By Chunk 7, the context held all prior chunks' code, tests, and errors — degrading attention on the final chunks.
-- kimi-superpowers-unchunked (91) built everything in one pass but the superpowers plugin dispatches subagents with fresh context for planning and review.
-- **Principle:** The optimal architecture is subagents with fresh context windows, each receiving only a summarized handoff ("here's what exists, here's what to build next") rather than the full conversation history.
-- This aligns with the Agent Design Guide's "minimal context wins" principle and JetBrains 2025 finding that observation masking matched LLM summarization at 52% cheaper.
-- **Implication for pipeline design:** Instead of one long session with role-switching, use separate invocations per phase. Each invocation gets: (1) the immutable artifacts from prior phases (PLAN.md, test files), (2) the current chunk's instructions, (3) relevant skills only. No prior conversation history.
-- **Why this matters more than chunking:** Chunking helps by focusing attention per chunk, but the context still accumulates. Subagents with fresh context get the focus benefit WITHOUT the accumulation cost.
+- **Principle:** The optimal architecture is subagents with fresh context windows, each receiving only a summarized handoff.
+- This aligns with the Agent Design Guide's "minimal context wins" principle.
 
 ### Finding 22: Manual chunking conflicts with plugin-driven planning
 - kimi-superpowers chunked (81) vs unchunked (91): manual chunks + superpowers' planning = two competing systems
-- The model tried to follow our chunk order AND superpowers' TDD/planning workflow, producing over-engineered output (split AuthForm into 3 components) and a build-breaking JSX error
-- **Principle:** If using a planning plugin (superpowers), don't also impose manual chunks. Let the plugin drive structure. If not using a plugin, manual chunks help.
-- Corollary: pchunked (93, no plugin) > superpowers+chunked (81) but superpowers+unchunked (91) is competitive
+- **Principle:** If using a planning plugin (superpowers), don't also impose manual chunks. Let the plugin drive structure.
+
+### Finding 23: Seam tests only fix handoff seams, not protocol seams (CRITICAL)
+
+**The seam problem is two-sided. Tests only caught one side.**
+
+| Seam type | What it verifies | What it misses |
+|---|---|---|
+| Handoff seam | A calls B (e.g., route calls broadcastPageUpdate) | Whether B's consumers exist (e.g., PageClient never opens WebSocket) |
+| Protocol seam | All participants implement a shared contract | Not tested in any v1 or v2 run |
+
+**v2 results:**
+- opus-subagents-v2-p2: **72** (down from v1's 88). Server-side seam wired correctly. Client-side WebSocket consumer: never built. Seam tests passed → orchestrator declared feature done → client gap invisible.
+- kimi-subagents-v2-p2: **68** (up from v1's DNF). pg-mem lifecycle fix worked. Same client-side gap.
+
+**Root cause:** v2 seam tests were written to verify `route → broadcast.ts → server.ts`. They correctly confirmed the server-side circuit. They did NOT test `PageClient.tsx → WebSocket → presence avatars`. The feature has two ends; only one was covered.
+
+**Principle: Participant completeness ≠ call-site presence.** A seam test that verifies `A calls B` does not verify that `C`, `D`, and `E` also exist as required participants in the protocol. Real-time features (WebSocket presence, live updates) require: route wires broadcast → server listens → client opens connection → client consumes events → UI reflects state. All five must exist.
+
+**Why metatests scored higher (88 vs 72):** kimi-metatests-v2-p2 Chunk 7 built Pages + WebSocket + Layout in a single context. The model wired the client naturally because the client code was co-present with the server code. Subagent pipeline split these across Phase 9 (pages) and Phase 10 (WebSocket), giving neither subagent visibility into what the other was supposed to build.
+
+**Fix direction (not yet implemented):**
+1. Feature-first mapping in writing-plans: enumerate all participants per cross-cutting concern BEFORE task decomposition. "WebSocket real-time: [server.ts, lib/events.ts, PageClient.tsx, presence UI]"
+2. Participant completeness check in subagent-driven-development: orchestrator verifies all named participants exist, not just that seam calls were made.
+3. Collapse cross-cutting concerns: features spanning N phases should be assigned to one subagent OR written as a shared interface contract first.
+
+### Finding 24: Compliance test findFiles bug persists across all subagent runs
+- Bug: `readdirSync(dir, {recursive:true})` returns `{name, parentPath}` objects, not strings
+- Effect: `path.join(dir, entry.name)` drops parentPath → only top-level files found
+- All 5 meta-tests pass vacuously (scan finds ~1 file, none match patterns)
+- Present in: kimi-superpowers-p1, opus-subagents-v2-p1, opus-subagents-v2-p2, kimi-subagents-v2-p2
+- Fix: `path.join(entry.parentPath, entry.name)` in /app/infra/v2/skills/meta-tests.md template
+- This is a known bug that needs to be fixed in the template before next runs
 
 ---
 
@@ -207,7 +240,8 @@ More process = more tokens ≠ more points. The optimal is minimal process that 
 | v1 | 6 skills | 306 | "One concern per file" | 89 (Opus), 88 (Kimi) |
 | v2 | 19 focused skills | 48 | "Template-first, max 7 rules, glob triggers" | 93 (P1), 89 (P2) |
 | v2+P2 | 28 skills (19 generic + 9 P2-specific) | ~50 | "Project-specific domain skills" | 89 (P2) |
-| v2.1 | 29 skills (+meta-tests) | ~50 | "+Tailwind v4 fix, meta-tests verbatim, intent framing" | 88 (P2 single-shot) |
+| v2.1 | 29 skills (+meta-tests) | ~50 | "+Tailwind v4 fix, meta-tests verbatim, intent framing" | 91 (P2, opus-intentional) |
+| subagents-v2 | v2.1 + intent framing + behavioral seam tests | ~50 | "+seam tests, pg-mem lifecycle rule" | 93 (P1), 72 (P2, REGRESSION) |
 
 ### v2 design principles (from SKILL_DESIGN_GUIDE.md)
 1. One skill = one concern (35-70 lines)
@@ -226,11 +260,15 @@ More process = more tokens ≠ more points. The optimal is minimal process that 
 |---|---|---|---|
 | **Single agent** | One prompt, build everything | 56-88 | Baseline |
 | **Chunked** | 7 chunks with acceptance criteria | 92 | +4 over flat. Focused attention per chunk. |
-| **Pipeline-chunked** | QA→Builder role switch per chunk | 93 | +1 over chunked. Tests-first helps. **BEST** |
+| **Pipeline-chunked** | QA→Builder role switch per chunk | 93 | +1 over chunked. Tests-first helps. **BEST single-shot P1** |
 | **Iterative** | QA→Builder→Reviewer per chunk | 91 | -2 vs pchunked. Review overhead hurts. |
 | **Pipeline (5-step)** | Plan→Test→Build→Fix→Review | DNF | Too complex for single invocation |
-
-**Winner: Pipeline-chunked (pchunked).** Simple QA→Builder per chunk. No reviewer. No complex orchestration.
+| **Subagents v1 P1** | 6 fresh subagents, orchestrated | 93 | Matches pchunked. Factories used, cleaner composition. |
+| **Subagents v1 P2** | 6 fresh subagents | 88 | Good but WebSocket seam. |
+| **Subagents v2 P1** | +intent framing + seam tests | 93 | Same score, better composition. Seam tests + working factories. |
+| **Subagents v2 P2** | +intent framing + seam tests | 72 | REGRESSION. Seam tests fixed wrong half. |
+| **Metatests P2** | Chunk 7 co-locates WebSocket + pages | 88 | WebSocket wired naturally by co-presence. |
+| **Intentional P2** | Intent framing, no extra rules | 91 | **BEST P2 overall.** Intent > rules. |
 
 ---
 
@@ -246,10 +284,10 @@ Tests that verify the testing infrastructure itself. `tests/meta/compliance.test
 - Unsafe `.parse()` used instead of `.safeParse()`
 - Raw `Response.json` in route handlers
 
-**Why strongest:** Models fix failing tests 100% of the time. This is external feedback (the one thing research says helps).
+**Known bug:** findFiles uses `path.join(dir, entry.name)` with `readdirSync({recursive:true})` which returns `{name, parentPath}` objects. All 5 meta-tests pass vacuously. Fix: `path.join(entry.parentPath, entry.name)`.
 
 ### Layer 2: Architectural contracts
-Every decision in ARCHITECTURE.md has a `**Verify:**` command. The reviewer runs each command mechanically. No open-ended review (that degrades quality).
+Every decision in ARCHITECTURE.md has a `**Verify:**` command. The reviewer runs each command mechanically. No open-ended review.
 
 ### Layer 3: Negative checks
 "Is there anything that SHOULD use X but DOESN'T?" Catches bypass patterns the positive check misses.
@@ -282,6 +320,9 @@ Chunk 0 verifies env vars, database, tool availability before any code.
 ### Critical P2 lesson
 The model used SQLite for P2 (scored 63) because all templates showed SQLite. **Templates override spec instructions.** When adding project-specific skills, the templates must match the required technology.
 
+### P2 WebSocket lesson (Finding 23)
+Real-time features have two ends. Subagent pipelines naturally split them across phases. The server end gets built first (route calls broadcast), the client end is left for a later phase that may not have visibility into what the server built. Meta-tests/chunked approach avoids this by co-locating both ends in the same context window.
+
 ---
 
 ## 8. What Opus Does Better Than Kimi
@@ -294,6 +335,7 @@ The model used SQLite for P2 (scored 63) because all templates showed SQLite. **
 | Factory discipline | Used in 7 test files | Created but not imported |
 | Cookie assertions | Verifies set-cookie header | Never |
 | Sync bcrypt (weakness) | Uses hashSync (blocks) | Uses async hash (correct) |
+| Phase count | 6 phases (focused) | 12 phases (granular, more seam boundaries) |
 
 ---
 
@@ -307,6 +349,8 @@ The model used SQLite for P2 (scored 63) because all templates showed SQLite. **
 | Phase 5 rushed | 4/8 runs | Context pressure at end | Complex features in middle |
 | Console statements | Baselines only | Skills eliminate this | code-hygiene skill |
 | Insecure sessions | Baselines only | Skills eliminate this | security skill |
+| WebSocket client gap | 4/4 subagent P2 runs | Client phase separate from server phase | Feature-first mapping (not yet implemented) |
+| Cascade delete | 3/4 subagent P2 runs | Spec requires CASCADE, model defaults to SET NULL | Add to P2 skill/template |
 
 ---
 
@@ -359,7 +403,7 @@ The model used SQLite for P2 (scored 63) because all templates showed SQLite. **
 │       ├── build-prompt.md          Standard v2 build prompt
 │       ├── chunked-plan-p1.md       Chunked plan for P1
 │       ├── chunked-plan-p2.md       Chunked plan for P2
-│       └── iterative-build-p1.md    Iterative build with review sub-agent
+│       └── iterative-build-p1.md   Iterative build with review sub-agent
 │
 ├── projects/
 │   ├── project-1.md                 Task Manager (★☆☆)
@@ -369,6 +413,17 @@ The model used SQLite for P2 (scored 63) because all templates showed SQLite. **
 ├── prompts/
 │   └── judge.md                     100-point scoring rubric
 │
+├── plugins/
+│   └── superpowers/                 obra/superpowers plugin (git submodule)
+│
+├── workspaces/                      Versioned workspace templates
+│   ├── opus-subagents-v2-p1/
+│   ├── opus-subagents-v2-p2/
+│   └── kimi-subagents-v2-p2/
+│
+├── scripts/
+│   └── setup-workspace.sh           Creates Linux user, substitutes placeholders, symlinks skills
+│
 └── runs/                            Build outputs (some overwritten)
 ```
 
@@ -376,75 +431,49 @@ The model used SQLite for P2 (scored 63) because all templates showed SQLite. **
 
 ## 12. Active Workspaces
 
-### Scored runs
-| Workspace | Model | Project | Infra | Score | Sessions | Notes |
-|---|---|---|---|---|---|---|
-| kimi-iterative-v2-p1 | Kimi | P1 | v2+meta | 94 | multi | Best P1 overall |
-| kimi-pchunked-p1 | Kimi | P1 | v2 | 93 | 1 | Best P1 single-shot |
-| kimi-chunked-p1 | Kimi | P1 | v2 | 92 | 1 | |
-| kimi-selfchunk-p1 | Kimi | P1 | v2 | 72 | 1 | Incomplete |
-| opus-tdd-p1 | Opus | P1 | v2+meta | 82 | 1 | No pages built |
-| kimi-skills-v2-p2 | Kimi | P2 | v2 | 89 | 6* | *Human-assisted |
-| kimi-metatests-v2-p2 | Kimi | P2 | v2.1 | 88 | 1 | Best P2 single-shot |
-| opus-metatests-p2-v2 | Opus | P2 | v2.1 | 84 | 1 | Gamed tests (Finding 17) |
-| kimi-hybrid-p2 | Kimi | P2 | rewritten | 74 | 1 | Build fail, rewrite bad |
-| kimi-metatests-p2 | Kimi | P2 | v2+meta | 79 | 1 | Build fail, no tw fix |
+### Scored runs (subagents)
+| Workspace | Model | Project | Score | Notes |
+|---|---|---|---|---|
+| opus-subagents-v1-p1 | Opus | P1 | 93 | v1 baseline |
+| opus-subagents-v2-p1 | Opus | P1 | 93 | v2. Seam tests + factories. Same score. |
+| opus-subagents-v1-p2 | Opus | P2 | 88 | v1. WebSocket seam (server calls not wired to routes) |
+| opus-subagents-v2-p2 | Opus | P2 | 72 | v2. Seam fixed server side. Client WebSocket never consumed. REGRESSION. |
+| kimi-subagents-v1-p2 | Kimi | P2 | DNF | pg-mem pool lifecycle bug |
+| kimi-subagents-v2-p2 | Kimi | P2 | 68 | v2. pg-mem fixed. Same client WebSocket gap. |
 
-### Pending scoring
-| Workspace | Model | Project | Infra | Tests | Build | Notes |
-|---|---|---|---|---|---|---|
-| opus-intentional-p2 | Opus | P2 | v2.1+intent | 120 | PASS | Testing Finding 18 |
-| kimi-superpowers-p1 | Kimi | P1 | v2.1+superpowers | 182 | FAIL | Plugin test (chunked) |
-| kimi-superpowers-unchunked-p1 | Kimi | P1 | v2.1+superpowers | 61 | PASS | Plugin test (unchunked) |
-
-### Not started
-| Workspace | Model | Project | Notes |
-|---|---|---|---|
-| mixed-pipeline-p2 | Opus+Kimi | P2 | Deprioritized (user prefers single-model) |
+### Scored runs (single-agent best)
+| Workspace | Model | Project | Score | Notes |
+|---|---|---|---|---|
+| kimi-iterative-v2-p1 | Kimi | P1 | 94 | Best P1 overall (multi-session) |
+| kimi-pchunked-p1 | Kimi | P1 | 93 | Best P1 single-shot |
+| opus-intentional-p2 | Opus | P2 | 91 | Best P2 overall. Intent framing validated. |
+| kimi-metatests-v2-p2 | Kimi | P2 | 88 | Best P2 Kimi single-shot |
+| opus-superpowers-p1 | Opus | P1 | 88 | Superpowers plugin |
 
 ---
 
 ## 13. What To Do Next
 
-### Pending scoring (this session)
-1. **Score opus-intentional-p2** — does intent framing fix Opus's test gaming? (Finding 18)
-2. **Score kimi-superpowers-p1** — does superpowers plugin help or add context noise?
-3. **Score kimi-superpowers-unchunked-p1** — can superpowers replace manual chunking?
+### Immediate fixes
+1. **Fix compliance test findFiles bug** in /app/infra/v2/skills/meta-tests.md
+   - Replace `path.join(dir, entry.name)` with `path.join(entry.parentPath, entry.name)`
+   - This bug makes all 5 meta-tests pass vacuously, masking all compliance violations
 
-### Experiments ready
-4. **Run P3** (Multi-Tenant Tracker) — tests if infra generalizes to hardest spec
-5. **Implement Finding 20** — emergent skill capture mechanism for long-lived codebases
-6. **Strengthen meta-tests** — add `as TypeRow` detection, test file existence check, assertion depth check
+2. **Add cascade delete rule to P2 skill/template** — every subagent P2 run gets this wrong
+
+3. **Add feature-first mapping to writing-plans skill** — enumerate all participants per cross-cutting concern before task decomposition (Finding 23 fix direction)
+
+4. **Add participant completeness check to subagent-driven-development skill** — orchestrator verifies all protocol participants exist, not just seam call sites
+
+### Experiments to run
+5. **Run the superpowers:subagent-driven-development improvements** — test if feature mapping + participant completeness check lifts P2 above 88
+6. **Run opus-subagents-v3-p2** with the participant completeness fix — target: ≥88 (matching metatests)
+7. **Run P3** (Multi-Tenant Tracker) — tests if infra generalizes to hardest spec
 
 ### Research questions
-7. Does intent framing work across models? (test on Kimi too)
-8. What's the actual ceiling for single-shot P2? (88 Kimi, 84 Opus — can we hit 90+?)
-9. Does the superpowers plugin's TDD enforcement stack with our meta-tests?
-10. Does infra effectiveness transfer to P3 with the same +50 point lift?
-11. **Does iteration help LOW-scoring models?** Research says iteration helps when initial output is far below ceiling. This is the most important open question.
-
-### Handoff commands
-```bash
-# Best P2 single-shot (88) — use as baseline for future P2 experiments
-su - kimi-metatests-v2-p2
-cd ~/runs/260403-kimi
-claude "Read ~/prompts/build.md and ~/projects/project-2.md, then build the project."
-
-# Opus with intent framing (pending) — tests Finding 18
-su - opus-intentional-p2
-cd ~/runs/260403-opus-intentional
-claude --model opus "Read ~/prompts/build.md and ~/projects/project-2.md, then build the project."
-
-# P1 superpowers (chunked)
-su - kimi-superpowers-p1
-cd ~/runs/260403-kimi-superpowers
-claude "Read ~/prompts/build.md and ~/projects/project-1.md, then build the project."
-
-# P1 superpowers (unchunked — superpowers decides structure)
-su - kimi-superpowers-unchunked-p1
-cd ~/runs/260403-kimi-sp-unchunked
-claude "Read ~/prompts/build.md and ~/projects/project-1.md, then build the project."
-```
+8. Can a subagent pipeline match metatests (88) on P2? Fix needs to target: feature mapping + participant completeness
+9. Does intent framing help Kimi as much as it helped Opus? (91 vs 84 = +7 for Opus)
+10. What's the ceiling for subagent P2? Theoretical max: all seams wired + intent + participant completeness
 
 ---
 
@@ -458,8 +487,10 @@ claude "Read ~/prompts/build.md and ~/projects/project-1.md, then build the proj
 6. **Path will drift** — cd to correct directory before invocation, accept -1 penalty
 7. **Score honestly** — the rubric has biases, note them but don't inflate scores
 8. **One variable per experiment** — change one thing, measure, then change the next
-9. **Don't rewrite — iterate** — modify the proven base (v2p2 build.md), don't start from scratch (hybrid-p2 scored 74 vs 88)
+9. **Don't rewrite — iterate** — modify the proven base (v2p2 build.md), don't start from scratch
 10. **Track single-shot vs multi-attempt** — human-assisted scores are not comparable to single-shot
 11. **Smarter models game, simpler models comply** — design for the model you're using (Finding 17)
-12. **Intent > rules** — framing the purpose ("production code for a team") may outperform adding more compliance rules (Finding 18, pending validation)
-13. **Pin infrastructure exactly** — exact file contents for config (Tailwind, PostCSS, tsconfig) eliminate the biggest source of build failures (Finding 15)
+12. **Intent > rules** — framing the purpose ("production code for a team") outperforms adding more compliance rules (Finding 18, validated: 91 vs 84)
+13. **Pin infrastructure exactly** — exact file contents for config eliminate the biggest source of build failures (Finding 15)
+14. **Protocol seams need participant maps** — seam tests that only check call-site presence leave the other end of the protocol unbuilt (Finding 23)
+15. **Co-location causes natural wiring** — features that span module boundaries should be built in the same context window, or have explicit participant contracts written first

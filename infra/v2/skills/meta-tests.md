@@ -23,10 +23,9 @@ const SRC = resolve(__dirname, '../../src');
 function findFiles(dir: string, ext: string[]): string[] {
   const results: string[] = [];
   try {
-    for (const entry of readdirSync(dir, { withFileTypes: true, recursive: true })) {
-      const full = join(dir, entry.name);
-      if (entry.isFile() && ext.some(e => entry.name.endsWith(e))) {
-        results.push(full);
+    for (const rel of readdirSync(dir, { recursive: true }) as string[]) {
+      if (ext.some(e => rel.endsWith(e))) {
+        results.push(join(dir, rel));
       }
     }
   } catch { /* dir doesn't exist yet */ }
