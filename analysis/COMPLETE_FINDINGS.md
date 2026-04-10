@@ -494,3 +494,42 @@ Real-time features have two ends. Subagent pipelines naturally split them across
 13. **Pin infrastructure exactly** — exact file contents for config eliminate the biggest source of build failures (Finding 15)
 14. **Protocol seams need participant maps** — seam tests that only check call-site presence leave the other end of the protocol unbuilt (Finding 23)
 15. **Co-location causes natural wiring** — features that span module boundaries should be built in the same context window, or have explicit participant contracts written first
+
+---
+
+## 15. v3 Subagent Results (2026-04-10)
+
+### Scores
+
+| Run | v2 Score | v3 Score | Delta | Key fix |
+|---|---|---|---|---|
+| opus-subagents-p2 | 72 | **89** | +17 | WebSocket client participant explicitly required |
+| kimi-subagents-p2 | 68 | **80** | +12 | Same fix; fewer remaining gaps closed than Opus |
+
+### All three v3 targeted fixes landed in both runs
+
+1. **WebSocket client wired** — PageClient.tsx opens WebSocket, listens for events, shows presence avatars. The participant map in the build prompt worked.
+2. **Cascade delete correct** — ON DELETE CASCADE on parent_id FK. Both runs.
+3. **Compliance findFiles fixed** — String form of readdirSync({recursive:true}). Meta-tests now scan real files.
+
+### Finding 23 validated
+
+Explicitly naming all WebSocket participants in the build prompt (including PageClient.tsx) and assigning client wiring to the same subagent that builds PageClient closed the protocol seam gap. Opus went 72→89. The participant completeness approach works.
+
+### Remaining Opus gap vs intentional (89 vs 91)
+
+2 points. Minor issues: slug deduplication, depth-5 enforcement untested at route layer, missing index on page_locks.expires_at. Not seam-related.
+
+### Kimi gap vs Opus (80 vs 89)
+
+Kimi left functional gaps that Opus didn't: depth enforcement not implemented (not just untested), N+1 breadcrumbs query pattern, client-side session secret exposure in WebSocket auth, missing README. These are model capability gaps, not infra gaps.
+
+### Subagent pipeline P2 score progression
+
+| Version | Opus | Kimi | What changed |
+|---|---|---|---|
+| v1 | 88 | DNF | Baseline subagents |
+| v2 | 72 | 68 | +intent framing, +seam tests (server side only) |
+| v3 | **89** | **80** | +participant map, +cascade delete rule |
+
+v2 was a regression because seam tests gave false confidence. v3 recovered and exceeded v1 for Opus (89 > 88).
